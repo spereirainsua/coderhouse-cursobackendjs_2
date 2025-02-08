@@ -1,14 +1,5 @@
 [
   {
-    "pid": 1,
-    "title": "Botas",
-    "description": "Botas de goma",
-    "price": 500,
-    "thumbnail": "Sin imagen",
-    "code": "code2234g4",
-    "stock": 17
-  },
-  {
     "pid": 2,
     "title": "Pelota",
     "description": "Pelota de futbol",
@@ -52,5 +43,49 @@
     "thumbnail": "Sin imagen",
     "code": "fdasdf323",
     "stock": 10
+  },
+  {
+    "pid": 7,
+    "title": "Remera escote v",
+    "description": "Remera de color rojo",
+    "code": "dafdsf1111",
+    "price": 350,
+    "status": true,
+    "stock": 10,
+    "category": "Remeras",
+    "thumbnail": "Sin imagen"
+  },
+  {
+    "pid": 8,
+    "title": "Remera 2",
+    "description": "Remera de color rojo",
+    "code": "dafdsf111122",
+    "price": 350,
+    "status": true,
+    "stock": 10,
+    "category": "Remeras",
+    "thumbnail": "Sin imagen"
+  },
+  {
+    "pid": 9,
+    "title": "gfs",
+    "description": "fdafad",
+    "code": "dafdsf1111223",
+    "price": 123,
+    "status": true,
+    "stock": 50,
+    "category": "Remeras",
+    "thumbnail": "sin imagen"
+  },
+  {
+    "pid": 10,
+    "title": "gfs",
+    "description": "fdafad",
+    "code": "dafdsf11112239",
+    "price": 123,
+    "status": true,
+    "stock": 50,
+    "category": "Remeras",
+    "thumbnail": "sin imagen"
   }
 ]

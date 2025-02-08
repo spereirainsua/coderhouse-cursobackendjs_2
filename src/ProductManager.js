@@ -1,5 +1,13 @@
 import fs from "fs"
 
+const validateFields = (fields) => {
+    for (let f of fields) {
+        if (!f) return false
+        if (f.toString().trim() === '') return false
+    }
+    return true
+}
+
 class ProductManager {
     //propiedades y metodos para obtener, crear, editar y eliminar un producto.
     //guardar datos en json
@@ -31,25 +39,31 @@ class ProductManager {
         }
     }
 
-    addProduct = (title, description, price, thumbnail, code, stock) => {
+    addProduct = (title, description, code, price, stock, category, thumbnail) => {
         try {
             let isUniqCode = this.products.find((prod) => prod.code === code) === undefined
-            if (title != '' && description != '' && price != undefined && thumbnail != '' && code != '' && isUniqCode && stock != undefined) {
+            if (!isUniqCode) {
+                return 400
+            }
+            if (validateFields([title, description, code, price, stock, category, thumbnail])) {
                 const product = {
                     pid: this.pid++,
                     title: title,
                     description: description,
-                    price: price,
-                    thumbnail: thumbnail,
                     code: code,
-                    stock: stock
+                    price: price,
+                    status: true,
+                    stock: stock,
+                    category: category,
+                    thumbnail: thumbnail                    
                 }
                 this.products.push(product)
-
                 fs.writeFileSync(this.pathFile, JSON.stringify(this.products, null, 2), "utf-8")
-            } else throw new Error("No se pudo agregar el producto")
+                return 201
+            } else return 400
         } catch (error) {
             console.error(error)
+            return 500
         }
     }
 

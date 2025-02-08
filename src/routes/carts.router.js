@@ -7,11 +7,11 @@ const cartsRouter = express.Router()
 const cartManager = new CartManager("./db/carts.JSON")
 const productManager = new ProductManager("./db/products.JSON")
 
-cartsRouter.get("/", (req, res) => {
+cartsRouter.post("/", (req, res) => {
     const carts = cartManager.createNewCart()
     if (carts) {
         res.status(201).send(carts)
-    }
+    } else res.status(500).send({ message: "Error del servidor."})
 })
 
 cartsRouter.get("/:cid", (req, res) => {

@@ -13,14 +13,15 @@ productsRouter.get("/", (req, res) => {
 productsRouter.get("/:pid", (req, res) => {
     //Capturar el id del producto, filtrar los productos y retornar el que coincida con pid
     const pid = req.params.pid
-    res.status(200).send(productManager.getProductById(pid))
+    const product = productManager.getProductById(pid)
+    product ? res.status(200).send(product) : res.status(404).send({ message: "Error, no se pudo encontrar el producto."})
 })
 
 productsRouter.post("/", (req, res) => {
     //Generar un nuevo producto
-    const { title, description, price, thumbnail, code, stock } = req.body
-    productManager.addProduct(title, description, price, thumbnail, code, stock)
-    res.status(201).send(productManager.getProducts())
+    const { title, description, code, price, stock, category, thumbnail } = req.body
+    const statusOfReq = productManager.addProduct(title, description, code, price, stock, category, thumbnail)
+    res.status(statusOfReq).send(statusOfReq === 201 ? productManager.getProducts(): { message: "Error al intentar realizar la solicitud."})
 })
 
 productsRouter.put("/:pid", (req, res) => {
