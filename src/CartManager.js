@@ -6,6 +6,9 @@ class CartManager {
     pathFile = ""
 
     constructor(pathFile) {
+        if (CartManager.instance) {
+            return CartManager.instance
+        }
         this.pathFile = pathFile
         try {
             let data = "[]"
@@ -21,6 +24,7 @@ class CartManager {
                 }
                 this.cid++
             }
+            CartManager.instance = this
             console.log("Se cargaron los datos de carritos correctamente")
         } catch (error) {
             console.log(error)

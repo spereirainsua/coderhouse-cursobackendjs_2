@@ -165,17 +165,6 @@
     "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_759800-MLA42767646233_072020-O.webp"
   },
   {
-    "pid": 16,
-    "title": "Repetidor inalámbrico de 2 antenas internas TP-Link",
-    "description": "Conexión inalámbrica. Tiene una velocidad de 300 Mbps. Banda única de 2.4 GHz. Cuenta con 0 antenas externas y 2 internas. Tiene 1 puerto para conectarse. Soporta el protocolo de seguridad WEP. Dimensiones: 110 mm de ancho, 67 mm de alto, 66 mm de profundidad. Dispositivo que facilita las conexiones de red.",
-    "code": "pci1616",
-    "price": 960,
-    "status": true,
-    "stock": 15,
-    "category": "Routers",
-    "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_880963-MLU74213918956_012024-O.webp"
-  },
-  {
     "pid": 17,
     "title": "Amplificador De Señal Wifi",
     "description": "Amplificador De Señal Wifi",
@@ -185,5 +174,27 @@
     "stock": 10,
     "category": "Routers",
     "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_837505-MLU81900608273_012025-O.webp"
+  },
+  {
+    "pid": 18,
+    "title": "Kingston Memoria 8gb 3600mhz Ddr4",
+    "description": "Optimizá el rendimiento de tu máquina con la tecnología DDR4. Memoria con formato DIMM. Alcanza una velocidad de 3600 MHz. Apta para computadoras de escritorio. Cuenta con una tasa de transferencia de 25600 MB/s. Compatible con AMD Ryzen",
+    "code": "pci1818",
+    "price": 1350,
+    "status": true,
+    "stock": 30,
+    "category": "memorias",
+    "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_738799-MLU77020906533_062024-O.webp"
+  },
+  {
+    "pid": 19,
+    "title": "Memoria Ram Hiksemi Armor Hsc408u32z2 3200mhz 8gb Ddr4",
+    "description": "Optimizá el rendimiento de tu máquina con la tecnología DDR4. Memoria con formato DIMM. Alcanza una velocidad de 3200 MHz.",
+    "code": "pci1919",
+    "price": 862,
+    "status": true,
+    "stock": 50,
+    "category": "memorias",
+    "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_693942-MLU74533190645_022024-O.webp"
   }
 ]

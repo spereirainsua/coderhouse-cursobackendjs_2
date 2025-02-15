@@ -37,8 +37,25 @@ socketForProducts.on("update products lists", (products) => {
             <h3>${ title }</h3>
             <p>Precio: $${ price }<br>
             Stock: ${ stock }<br>
-            <a id=${ pid } href="/">Ver mas...</a></p>
+            <button id=${ pid } name="btnDeleteProduct">Eliminar</button>
+            </p>
           </div>
         </article>`
-    });
+    })
+
+    const btnDeleteProducts = document.getElementsByName("btnDeleteProduct")
+    btnDeleteProducts.forEach((product) => {
+      product.addEventListener("click", (e) => {
+        socketForProducts.emit("delete product", e.target.id)
+      })
+    })
+})
+
+
+socketForProducts.on("error insert products", (res) => {
+  alert(res.message)
+})
+
+socketForProducts.on("error delete products", (res) => {
+  alert(res.message)
 })

@@ -16,6 +16,9 @@ class ProductManager {
     pathFile = ""
 
     constructor(pathFile) {
+        if (ProductManager.instance) {
+            return ProductManager.instance
+        }
         this.pathFile = pathFile
         //obtener ID del ultimo registro y guardarlo en id
         //cargar productos desde json a array de datos products
@@ -34,9 +37,11 @@ class ProductManager {
                 }
                 this.pid++
             }
+            ProductManager.instance = this
         } catch (error) {
             console.log(error)
         }
+
     }
 
     addProduct = (title, description, code, price, stock, category, thumbnail) => {

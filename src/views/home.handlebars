@@ -1,5 +1,21 @@
 <div>
     <h2>Vista Home</h2>
-    <div id="product-container"></div>
+    <div id="product-container">
+        {{#each users}}
+            {{#with this}}
+        <article class="product-card">
+          <div class="product-image-container">
+          <img src={{thumbnail}} alt="Imagen del producto" class="product-image">
+          </div>
+          <div class="product-info">
+            <h3>{{title}}</h3>
+            <p>Precio: ${{price}}<br>
+            Stock: ${{stock}}<br>
+            <a href="/">Ver mas...</a></p>
+          </div>
+        </article>
+            {{/with}}
+        {{/each}}
+    </div>
 </div>
 <script src="/js/home.js"></script>
