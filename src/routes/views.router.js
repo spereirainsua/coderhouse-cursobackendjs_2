@@ -3,7 +3,7 @@ import ProductManager from "../ProductManager.js"
 
 const viewsRouter = express.Router()
 
-const productManager = new ProductManager("./db/products.JSON")
+const productManager = new ProductManager()
 
 export default function (io) {
 

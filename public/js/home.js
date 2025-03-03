@@ -1,11 +1,11 @@
 fetch('http://localhost:8080/api/products')
   .then(response => response.json())
   .then(data => {
-    // console.log(data)
-    const displayProducts = document.getElementById("product-container")
-    for (let product of data) {
-      displayProducts.innerHTML += 
-        `<article class="product-card">
+    if (data.status == "success") {
+      const displayProducts = document.getElementById("product-container")
+      for (let product of data.payload) {
+        displayProducts.innerHTML +=
+          `<article class="product-card">
           <div class="product-image-container">
           <img src="${product.thumbnail}" alt="Imagen del producto" class="product-image">
           </div>
@@ -16,5 +16,6 @@ fetch('http://localhost:8080/api/products')
             <a href="/">Ver mas...</a></p>
           </div>
         </article>`
+      }
     }
-  })
+  }).catch(error => console.log("Error de conexión con el servidor " + error.message))
