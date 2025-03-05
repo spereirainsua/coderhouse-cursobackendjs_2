@@ -20,12 +20,24 @@ cartsRouter.get("/:cid", async (req, res) => {
     else res.status(404).send(cart)
 })
 
-cartsRouter.post("/:cid/product/:pid", async (req, res) => {
-    // Agregar el producto encontrado con el pid al carrito con el cid, si existe el producto se debe sumar la cantidad sin generar duplicado
-    // { id: 10, quantity: 2 }
+cartsRouter.put("/:cid/product/:pid", async (req, res) => {
     const { cid, pid } = req.params
-    const result = await cartManager.addProductToCart(cid, pid)
+    const result = await cartManager.updateProductsInCart(cid, pid)
     if (result.status == "success") return res.status(201).send(result.payload)
+    else return res.status(500).send(result)
+})
+
+cartsRouter.delete("/:cid/product/:pid", async (req, res) => {
+    const { cid, pid } = req.params
+    const result = await cartManager.deleteProductsInCart(cid, pid)
+    if (result.status == "success") return res.status(200).send(result)
+    else return res.status(500).send(result)
+})
+
+cartsRouter.delete("/:cid", async (req, res) => {
+    const { cid } = req.params
+    const result = await cartManager.deleteCart(cid)
+    if (result.status == "success") return res.status(200).send(result)
     else return res.status(500).send(result)
 })
 

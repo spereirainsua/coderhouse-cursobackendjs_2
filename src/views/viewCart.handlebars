@@ -23,45 +23,36 @@
         </nav>
     </header>
 <div>
-  <h2>{{title}}</h2>
-  <div id="products-container" class="products-container">
-    {{#with products}}
-    {{#each payload}}
-    {{#with this}}
-    <article class="product-card">
-      <div class="img-container">
-        <img src={{thumbnail}} alt="Imagen del producto" class="card-image">
-      </div>
-      <div class="product-info">
-        <h3>{{title}}</h3>
-        <p>Precio: ${{price}}<br>
-          Stock: {{stock}}<br>
-        </p>
-        <a href="/products/{{_id}}" class="btn-card btn-card-view">Ver más detalles</a>
-        <button id="{{_id}}" name="addToCart" class="btn-card btn-card-add">Agregar al carrito</button>
-      </div>
-    </article>
-    {{/with}}
-    {{/each}}
-  </div>
-  <div class="paginate-container">
-    <div class="paginate">
-      {{#if hasPrevPage}}
-      <a href="{{prevLink}}" class="btn-paginate">Anterior</a>
-      {{else}}
-      <button class="btn-paginate" disabled>Anterior</button>
-      {{/if}}
-
-      <span>Página {{page}} de {{totalPages}}</span>
-
-      {{#if hasNextPage}}
-      <a href={{nextLink}} class="btn-paginate">Siguiente</a>
-      {{else}}
-      <button class="btn-paginate" disabled>Siguiente</button>
-      {{/if}}
+    <h2>{{title}}</h2>
+    <div id="cartContainer" class="cart-container">
+        {{#if status}}
+        {{#each cart}}
+        {{#with this}}
+        <div class="card-row">
+            <div class="counter-container">
+                <span>{{quantity}} x</span>
+            </div>
+            <div class="img-container-row">
+                <img src={{productId.thumbnail}} alt="Imagen del producto" class="card-img-row" />
+            </div>
+            <div class="title-container-row">
+                <span>{{productId.title}}</span>
+            </div>
+            <div class="subtotal-row-container">
+                <span>{{productId.price}}</span>
+            </div>
+            <div class="btn-delete-row">
+                <button id="{{productId._id}}" name="deleteFromCart" class="btn btn-delete">
+                    <span>❌</span>
+                </button>
+            </div>
+        </div>
+        {{/with}}
+        {{/each }}
+        {{else}}
+            <span>El carrito está vacío.</span>
+        {{/if}}
     </div>
-    {{/with}}
-  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/js/home.js"></script>
+<script src="/js/viewCart.js"></script>

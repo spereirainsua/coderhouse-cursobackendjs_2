@@ -8,15 +8,15 @@ const validateFields = (fields) => {
     return true
 }
 
-class ProductManager {
-    constructor() {
-        //Por si se necesita inicializar con algun valor especifico la instancia
-        // if (ProductManager.instance) {
-        //     return ProductManager.instance
-        // }
-        // ProductManager.instance = this
-    }
+function setNewPage(url, newPage) {
+    const urlParams = new URLSearchParams(url)
 
+    urlParams.set('page', newPage)
+
+    return urlParams.toString()
+}
+
+class ProductManager {
     addProduct = async (title, description, code, price, stock, category, thumbnail) => {
         try {
             if (validateFields([title, description, code, price, stock, category, thumbnail])) {
@@ -30,21 +30,60 @@ class ProductManager {
                     thumbnail: thumbnail
                 })
                 await product.save()
-                return { status: 201,  message: { status: "success", message: "Producto ingresado correctamente!"} }
-            } else 
-                return { status: 400,  message: { status: "error", message: "Error al procesar los datos de la solicitud." } }
+                return { status: 201, message: { status: "success", message: "Producto ingresado correctamente!" } }
+            } else
+                return { status: 400, message: { status: "error", message: "Error al procesar los datos de la solicitud." } }
         } catch (error) {
             if (error.code == 11000)
-                return { status: 500, message: { status: "error", message: "Código de producto duplicado."} }
-            else 
-                return { status: 500, message: { status: "error", message: "Error al intentar realizar la solicitud."} }
+                return { status: 500, message: { status: "error", message: "Código de producto duplicado." } }
+            else
+                return { status: 500, message: { status: "error", message: "Error al intentar realizar la solicitud." } }
         }
     }
 
-    getProducts = async () => {
+    getProducts = async (url, limit, page, sort, query) => {
         try {
-            const products = await Product.find()
-            return { status: "success", payload: products }
+            const params = {
+                select: 'title price stock thumbnail',
+                limit: limit || 10,
+                page: page || 1
+            }
+
+            if (sort) {
+                sort === "asc" ? params.sort = { price: 1 } : sort === "desc" ? params.sort = { price: -1 } : {}
+            }
+
+            const queryFilter = {}
+            if (query) {
+                if (Array.isArray(query)) {
+                    query.forEach(param => {
+                        const [key, value] = param.split('_')
+                        if (key && value !== undefined) {
+                            queryFilter[key] = value === "true" ? true : value === "false" ? false : value
+                        }
+                    })
+                } else {
+                    const [key, value] = query.split('_')
+                    if (key && value !== undefined) {
+                        queryFilter[key] = value === "true" ? true : value === "false" ? false : value
+                    }
+                }
+            }
+            const response = await Product.paginate(queryFilter, {...params, lean: true})
+            
+            const formatedResponse = {
+                payload: response.docs,
+                totalPages: response.totalPages,
+                prevPage: response.hasPrevPage ? response.page - 1 : response.page,
+                nextPage: response.hasNextPage ? response.page + 1 : response.page,
+                page: response.page,
+                hasPrevPage: response.hasPrevPage,
+                hasNextPage: response.hasNextPage,
+                prevLink: response.hasPrevPage ? url.split('?')[0] + '?' + setNewPage(url.split('?')[1], response.page - 1) : null,
+                nextLink: response.hasNextPage ? url.split('?')[0] + '?' + setNewPage(url.split('?')[1], response.page + 1) : null
+            }
+            //Falta realizar proyección para no consultar tantos datos juntos
+            return { status: "success", ...formatedResponse }
         } catch (error) {
             return { status: "error", message: error.message }
         }
@@ -53,8 +92,8 @@ class ProductManager {
 
     getProductById = async (pid) => {
         try {
-            const response = await Product.findById(pid)
-            return response
+            const response = await Product.findById(pid).lean()
+            return { status: "success", payload: response }
         } catch (error) {
             return { status: "error", message: error.message }
         }

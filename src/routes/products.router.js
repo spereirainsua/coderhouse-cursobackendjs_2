@@ -6,18 +6,22 @@ const productsRouter = express.Router()
 const productManager = new ProductManager()
 
 productsRouter.get("/", async (req, res) => {
-    productManager.getProducts()
-    .then(response =>{
-        if (response.status == "success") res.status(200).send(response)
-        else res.status(500).send(response)
-    })
+    const { limit, page, sort, query } = req.query
+    const url = req.protocol + '://' + req.get('host') + req.url
+    productManager.getProducts(url, limit, page, sort, query)
+        .then(response => {
+            if (response.status == "success") {
+                res.status(200).send(response)
+            } else res.status(500).send(response)
+        }).catch(error => {
+            res.status(500).send({ status: "error", message: "Error al realizar la consulta " + error.message })
+        })
 })
 
 productsRouter.get("/:pid", async (req, res) => {
-    //Capturar el id del producto, filtrar los productos y retornar el que coincida con pid
     const pid = req.params.pid
-    const product = await productManager.getProductById(pid)
-    product ? res.status(200).send(product) : res.status(404).send({ status: "error", message: "Error, no se pudo encontrar el producto."})
+    const result = await productManager.getProductById(pid)
+    result.status == "success" ? res.status(200).send(result) : res.status(500).send(result)
 })
 
 productsRouter.post("/", async (req, res) => {
