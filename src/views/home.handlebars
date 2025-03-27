@@ -1,0 +1,67 @@
+<header class="container-fluid">
+        <nav class="navbar navbar-expand-md">
+            <div class="container-lg">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    <ul class="navbar-nav mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Inicio</a>
+                        </li>
+                        <li id="goToCart" class="nav-item">
+                            
+                        </li>
+                        <li class="nav-item">
+                            <a id="btnLogOut" class="nav-link">Cerrar sesión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+<div>
+  <h2>{{title}}</h2>
+  <div id="products-container" class="products-container">
+    {{#with products}}
+    {{#each payload}}
+    {{#with this}}
+    <article class="product-card">
+      <div class="img-container">
+        <img src={{thumbnail}} alt="Imagen del producto" class="card-image">
+      </div>
+      <div class="product-info">
+        <h3>{{title}}</h3>
+        <p>Precio: ${{price}}<br>
+          Stock: {{stock}}<br>
+        </p>
+        <a href="/products/{{_id}}" class="btn-card btn-card-view">Ver más detalles</a>
+        <button id="{{_id}}" name="addToCart" class="btn-card btn-card-add">Agregar al carrito</button>
+      </div>
+    </article>
+    {{/with}}
+    {{/each}}
+  </div>
+  <div class="paginate-container">
+    <div class="paginate">
+      {{#if hasPrevPage}}
+      <a href="{{prevLink}}" class="btn-paginate">Anterior</a>
+      {{else}}
+      <button class="btn-paginate" disabled>Anterior</button>
+      {{/if}}
+
+      <span>Página {{page}} de {{totalPages}}</span>
+
+      {{#if hasNextPage}}
+      <a href={{nextLink}} class="btn-paginate">Siguiente</a>
+      {{else}}
+      <button class="btn-paginate" disabled>Siguiente</button>
+      {{/if}}
+    </div>
+    {{/with}}
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/home.js"></script>

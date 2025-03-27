@@ -1,4 +1,4 @@
-import fs from "fs"
+import Product from './models/product.model.js'
 
 const validateFields = (fields) => {
     for (let f of fields) {
@@ -8,115 +8,124 @@ const validateFields = (fields) => {
     return true
 }
 
+function setNewPage(url, newPage) {
+    const urlParams = new URLSearchParams(url)
+
+    urlParams.set('page', newPage)
+
+    return urlParams.toString()
+}
+
 class ProductManager {
-    //propiedades y metodos para obtener, crear, editar y eliminar un producto.
-    //guardar datos en json
-    pid = 1
-    products = []
-    pathFile = ""
-
-    constructor(pathFile) {
-        this.pathFile = pathFile
-        //obtener ID del ultimo registro y guardarlo en id
-        //cargar productos desde json a array de datos products
+    addProduct = async (title, description, code, price, stock, category, thumbnail) => {
         try {
-            let data = "[]"
-            if (fs.existsSync(pathFile)) {
-                data = fs.readFileSync(pathFile, "utf8")
-                this.products = JSON.parse(data)
-            } else {
-                data = fs.writeFileSync(pathFile, "[]", "utf8")
-            }
-            console.log("Se cargaron los productos correctamente")
-            if (this.products.length > 0) {
-                for (let prod of this.products) {
-                    if (prod.pid > this.pid) this.pid = prod.pid
-                }
-                this.pid++
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    addProduct = (title, description, code, price, stock, category, thumbnail) => {
-        try {
-            let isUniqCode = this.products.find((prod) => prod.code === code) === undefined
-            if (!isUniqCode) {
-                return 400
-            }
             if (validateFields([title, description, code, price, stock, category, thumbnail])) {
-                const product = {
-                    pid: this.pid++,
+                const product = new Product({
                     title: title,
                     description: description,
                     code: code,
                     price: price,
-                    status: true,
                     stock: stock,
                     category: category,
-                    thumbnail: thumbnail                    
-                }
-                this.products.push(product)
-                fs.writeFileSync(this.pathFile, JSON.stringify(this.products, null, 2), "utf-8")
-                return 201
-            } else return 400
+                    thumbnail: thumbnail
+                })
+                await product.save()
+                return { status: 201, message: { status: "success", message: "Producto ingresado correctamente!" } }
+            } else
+                return { status: 400, message: { status: "error", message: "Error al procesar los datos de la solicitud." } }
         } catch (error) {
-            console.error(error)
-            return 500
+            if (error.code == 11000)
+                return { status: 500, message: { status: "error", message: "Código de producto duplicado." } }
+            else
+                return { status: 500, message: { status: "error", message: "Error al intentar realizar la solicitud." } }
         }
     }
 
-    getProducts = () => {
-        return this.products
-    }
-
-    getProductById = (pid) => {
-        let productResult = this.products.filter((prod) => parseInt(prod.pid) === parseInt(pid))
-        if (productResult.length > 0) {
-            return productResult[0]
-        } else {
-            console.log("Not found")
-            return null
-        }
-    }
-
-    updateProduct = (pid, title, description, price, thumbnail, code, stock) => {
+    getProducts = async (url, limit, page, sort, query) => {
         try {
-            let productIndex = this.products.findIndex((product) => parseInt(product.pid) === parseInt(pid))
-            if (productIndex != -1 && title != '' && description != '' && price != undefined && thumbnail != '' && code != '' && stock != undefined) {
-                this.products[productIndex] = {
-                    pid: pid,
-                    title: title,
-                    description: description,
-                    price: price,
-                    thumbnail: thumbnail,
-                    code: code,
-                    stock: stock
-                }
-                fs.writeFileSync(this.pathFile, JSON.stringify(this.products, null, 2), "utf-8")
-                return { message: "Producto actualizado", index: productIndex }
-            } else {
-                if (productIndex === -1)
-                    return { message: "No se pudo encontrar el producto.", index: productIndex }
-                else
-                    return { message: "Error al recuperar los nuevos datos del producto.", index: -2 }
+            const params = {
+                select: 'title price stock thumbnail',
+                limit: limit || 10,
+                page: page || 1
             }
+
+            if (sort) {
+                sort === "asc" ? params.sort = { price: 1 } : sort === "desc" ? params.sort = { price: -1 } : {}
+            }
+
+            const queryFilter = {}
+            if (query) {
+                if (Array.isArray(query)) {
+                    query.forEach(param => {
+                        const [key, value] = param.split('_')
+                        if (key && value !== undefined) {
+                            queryFilter[key] = value === "true" ? true : value === "false" ? false : value
+                        }
+                    })
+                } else {
+                    const [key, value] = query.split('_')
+                    if (key && value !== undefined) {
+                        queryFilter[key] = value === "true" ? true : value === "false" ? false : value
+                    }
+                }
+            }
+            const response = await Product.paginate(queryFilter, {...params, lean: true})
+            
+            const formatedResponse = {
+                payload: response.docs,
+                totalPages: response.totalPages,
+                prevPage: response.hasPrevPage ? response.page - 1 : response.page,
+                nextPage: response.hasNextPage ? response.page + 1 : response.page,
+                page: response.page,
+                hasPrevPage: response.hasPrevPage,
+                hasNextPage: response.hasNextPage,
+                prevLink: response.hasPrevPage ? url.split('?')[0] + '?' + setNewPage(url.split('?')[1], response.page - 1) : null,
+                nextLink: response.hasNextPage ? url.split('?')[0] + '?' + setNewPage(url.split('?')[1], response.page + 1) : null
+            }
+            //Falta realizar proyección para no consultar tantos datos juntos
+            return { status: "success", ...formatedResponse }
         } catch (error) {
-            console.error(error)
-            return { message: "Error inesperado, no se pudo actualizar el producto", index: -3 }
+            return { status: "error", message: error.message }
         }
     }
 
-    deleteProduct = (pid) => {
+
+    getProductById = async (pid) => {
         try {
-            const productindex = this.products.findIndex((product) => parseInt(product.pid) === parseInt(pid))
-            if (productindex === -1) return productindex
-            this.products.splice(productindex, 1)
-            fs.writeFileSync(this.pathFile, JSON.stringify(this.products, null, 2), "utf-8")
-            return 1
+            const response = await Product.findById(pid).lean()
+            return { status: "success", payload: response }
         } catch (error) {
-            console.error(error)
+            return { status: "error", message: error.message }
+        }
+    }
+
+    updateProduct = async (pid, title, description, price, thumbnail, code, stock, status) => {
+        try {
+            const updatedData = {
+                ...(title ? { title: title } : {}),
+                ...(description ? { description: description } : {}),
+                ...(price ? { price: price } : {}),
+                ...(thumbnail ? { thumbnail: thumbnail } : {}),
+                ...(code ? { code: code } : {}),
+                ...(stock ? { stock: stock } : {}),
+                ...(status ? { status: status } : {})
+            }
+            const response = await Product.findByIdAndUpdate(
+                pid,
+                updatedData,
+                { new: true }
+            )
+            return response
+        } catch (error) {
+            return { status: "error", message: "Error al actualizar el producto." }
+        }
+    }
+
+    deleteProduct = async (pid) => {
+        try {
+            const result = await Product.findByIdAndDelete(pid)
+            return result
+        } catch (error) {
             return null
         }
     }

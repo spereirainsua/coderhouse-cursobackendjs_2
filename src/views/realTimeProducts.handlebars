@@ -1,0 +1,34 @@
+<div>
+    <h2>Vista Real Time Products</h2>
+
+    <div class="form-container">
+        <form id="productForm" class="form-fields-container" action="">
+            <label for="title">Título: </label>
+            <input id="title" type="text" placeholder="Memoria RAM 8GB DDR4">
+
+            <label for="description">Descripción: </label>
+            <input id="description" type="text" placeholder="Marca HyperX, 3200MHz, con led RBG...">
+
+            <label for="code">Código: </label>
+            <input id="code" type="text" placeholder="pci1234">
+
+            <label for="price">Precio: </label>
+            <input id="price" type="text" placeholder="1234">
+
+            <label for="stock">Stock: </label>
+            <input id="stock" type="text" placeholder="15">
+
+            <label for="category">Categoría: </label>
+            <input id="category" type="text" placeholder="Hardware">
+
+            <label for="thumbnail">Imagen(URL): </label>
+            <input id="thumbnail" type="text" placeholder="URL...">
+
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    <div id="realTimeProductsContainer"></div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

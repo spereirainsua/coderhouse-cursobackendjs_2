@@ -1,73 +1,92 @@
-import fs from "fs"
+import Cart from './models/cart.model.js'
 
 class CartManager {
-    cid = 1
-    carts = []
-    pathFile = ""
-
-    constructor(pathFile) {
-        this.pathFile = pathFile
+    createNewCart = async () => {
         try {
-            let data = "[]"
-            if (fs.existsSync(pathFile)) {
-                data = fs.readFileSync(pathFile, "utf8")
-                this.carts = JSON.parse(data)
-            } else {
-                data = fs.writeFileSync(pathFile, "[]", "utf8")
-            }
-            if (this.carts.length > 0) {
-                for (let cart of this.carts) {
-                    if (cart.cid > this.cid) this.cid = cart.cid
+            const cart = new Cart()
+            const result = await cart.save()
+            return { status: "success", payload: result }
+        } catch (error) {
+            console.error("Error al crear el carrito: " + error.message)
+            return { status: "error", message: "Error al crear el carrito." }
+        }
+    }
+
+    getCarts = async () => {
+        try {
+            const products = await Cart.find()
+            return { status: "success", payload: products }
+        } catch (error) {
+            return { status: "error", message: error.message }
+        }
+    }
+
+    getCartById = async (cid) => {
+        try {
+            const response = await Cart.find({ _id: cid }).lean()
+            return { status: "success", payload: response }
+        } catch (error) {
+            return { status: "error", message: error.message }
+        }
+    }
+
+    updateProductsInCart = async (cid, pid) => {
+        try {
+            const cart = await Cart.findById(cid)
+            const product = cart.products.find(item => item.productId == pid)
+            const productIndex = cart.products.findIndex(item => item.productId == pid)
+            if (cart) {
+                if (product) {
+                    cart.products[productIndex].quantity += 1
+                    const response = await cart.save()
+                    return { status: "success", payload: response }
+                } else {
+                    const response = await Cart.findByIdAndUpdate(
+                        cid,
+                        { $push: { products: { productId: pid, quantity: 1 } } },
+                        { new: true }
+                    )
+                    return { status: "success", payload: response }
                 }
-                this.cid++
-            }
-            console.log("Se cargaron los datos de carritos correctamente")
+            } else return { status: "error", message: "No se encontro el carrito especificado." }
         } catch (error) {
-            console.log(error)
+            return { status: "error", message: "Error al agregar un producto " + error.message }
         }
     }
 
-    createNewCart = () => {
+    deleteProductsInCart = async (cid, pid) => {
         try {
-            const cart = {
-                cid: this.cid++,
-                products: []
-            }
-            this.carts.push(cart)
-            fs.writeFileSync(this.pathFile, JSON.stringify(this.carts, null, 2), "utf-8")
-            return this.carts
+            const cart = await Cart.findById(cid)
+            const product = cart.products.find(item => item.productId == pid)
+            const productIndex = cart.products.findIndex(item => item.productId == pid)
+            if (cart) {
+                if (product) {
+                    const response = await Cart.findByIdAndUpdate(
+                        cid,
+                        { $pull: { products: { productId: pid } } },
+                        { new: true }
+                    )
+
+                    return { status: "success", payload: response }
+                } else {
+                    return { status: "error", message: "No se encontro este producto en el carrito." }
+                }
+            } else return { status: "error", message: "No se encontro el carrito especificado." }
         } catch (error) {
-            console.error(error)
-            return null
+            return { status: "error", message: "Error al eliminar el producto " + error.message }
         }
     }
 
-    getCarts = () => {
-        return this.carts
-    }
-
-    getCartById = (cid) => {
-        let cartResult = this.carts.filter((cart) => parseInt(cart.cid) == parseInt(cid))
-        if (cartResult.length > 0) {
-            return cartResult[0]
-        } else {
-            console.log("Not found")
-            return null
-        }
-    }
-
-    addProductToCart = (cid, pid) => {
+    deleteCart = async (cid) => {
         try {
-            let cartIndex = this.carts.findIndex((cart) => parseInt(cart.cid) === parseInt(cid))
-            let productIndex = this.carts[cartIndex].products.findIndex((product) => parseInt(product.id) === parseInt(pid))
-            if (productIndex != -1) {
-                this.carts[cartIndex].products[productIndex].quantity++
-            } else this.carts[cartIndex].products.push({ id: pid, quantity: 1 })
-            fs.writeFileSync(this.pathFile, JSON.stringify(this.carts, null, 2), "utf-8")
-            return this.carts[cartIndex]
+            const response = await Cart.findByIdAndUpdate(
+                cid,
+                { $set: { products: [] } },
+                { new: true }
+            )
+            return { status: "success", payload: response }
         } catch (error) {
-            console.error(error)
-            return null
+            return { status: "error", message: "No se pudo vaciar el carrito " + error.message }
         }
     }
 }
