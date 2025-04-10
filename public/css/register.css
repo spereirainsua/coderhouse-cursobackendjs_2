@@ -1,6 +1,21 @@
 .form-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 70vh;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.form-container form input {
+    margin: 10px 0;
+}
+
+.form-container form button {
+    margin: 10px 0;
 }

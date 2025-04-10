@@ -1,8 +1,8 @@
-const cartId = localStorage.getItem('cartId')
+// const cartId = localStorage.getItem('cartId')
 
-if (!cartId) {
-    window.location.href = "/register"
-}
+// if (!cartId) {
+//     window.location.href = "/register"
+// }
 
 const btnAddProductToCart = document.querySelectorAll('button[name="addToCart"]')
 btnAddProductToCart.forEach(btn => {
@@ -15,6 +15,11 @@ btnAddProductToCart.forEach(btn => {
                 headers: { "Content-Type": "application/json" }
             })
             const data = await response.json()
+            if (data?.error) {
+                const error = new Error("Se requiere iniciar sesión!")
+                error.statusCode = 401
+                throw error
+            }
             Swal.fire({
                 icon: "success",
                 title: "Exito!",
