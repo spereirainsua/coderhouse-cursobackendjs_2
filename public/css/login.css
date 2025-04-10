@@ -1,0 +1,19 @@
+
+.form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#loginForm, .container-google {
+    display: flex;
+    flex-direction: column;
+    min-width: 35%;
+    
+}
+
+.login-input, .login-btn {
+    margin-bottom: 10px;
+    width: 100%;
+}

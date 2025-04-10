@@ -1,34 +1,9 @@
-<header class="container-fluid">
-        <nav class="navbar navbar-expand-md">
-            <div class="container-lg">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                    <ul class="navbar-nav mb-2 mb-md-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Inicio</a>
-                        </li>
-                        <li id="goToCart" class="nav-item">
-                            
-                        </li>
-                        <li class="nav-item">
-                            <a id="btnLogOut" class="nav-link">Cerrar sesión</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
 <div>
     <h2>{{title}}</h2>
     <div class="container-product-detail">
         {{#if status}}
         <h3>{{product.title}}</h3>
-        <img src="{{product.thumbnail}}" alt="Imagen del producto" class="card-img-details" />
-        <p>{{product.description}}</p>
+        <img src="{{product.photo}}" alt="Imagen del producto" class="card-img-details" />
         <div class="item-count-container">
             <div>
                 <span class="item-price">${{product.price}}</span>

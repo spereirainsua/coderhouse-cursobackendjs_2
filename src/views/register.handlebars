@@ -1,13 +1,10 @@
-{{#if response.status }}
-<div class="form-container">
-    <form id="registerForm" style="max-width: 600px;">
-        
-            <label for="username">Nombre de Usuario</label>
-            <input class="form-control" type="text" id="username" name="username" required>
-        
+<div class="container-lg form-container">
+    <h1>Registrarse</h1>
+    <form id="registerForm">
+            <input class="form-control" type="email" name="email" id="email" placeholder="Email">
+            <input class="form-control" type="password" name="password" id="password" placeholder="Password">
+            <input class="form-control" type="text" name="photo" id="photo" placeholder="Photo...">
         <button class="btn btn-success" type="submit">Registrarse</button>
     </form>
 </div>
-{{/if}}
-
 <script src="/js/register.js"></script>
