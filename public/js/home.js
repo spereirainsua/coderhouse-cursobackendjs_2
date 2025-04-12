@@ -2,8 +2,13 @@ const btnAddProductToCart = document.querySelectorAll('button[name="addToCart"]'
 btnAddProductToCart.forEach(btn => {
     btn.addEventListener('click', async (event) => {
         try {
-            const productId = event.currentTarget.id
+            const productId = event?.currentTarget?.id
             cart_id = await getCart()
+            if (cart_id == 0) {
+                const error = new Error("Se requiere iniciar sesión!")
+                error.statusCode = 401
+                throw error
+            }
             const route = "/api/carts/" + cart_id + "/product/" + productId
             const response = await fetch(route, {
                 method: "PUT",
