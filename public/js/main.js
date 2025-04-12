@@ -2,8 +2,15 @@ const btnCart = document.getElementById('btnCart')
 const btnLogout = document.getElementById('btnLogOut')
 
 async function getCart() {
-    let route = "/api/carts/getCart"
+    let route = "/api/auth/online"
     let response = await fetch(route, {
+        method: "POST"
+    })
+    if (response.status != 200) {
+        throw new Error("No autenticado!")
+    }
+    route = "/api/carts/getCart"
+    response = await fetch(route, {
         method: "GET"
     })
     let data = await response.json()
@@ -18,7 +25,6 @@ async function getCart() {
 }
 
 let cart_id = 0
-
 
 if (btnCart) {
     btnCart.addEventListener("click", async () => {

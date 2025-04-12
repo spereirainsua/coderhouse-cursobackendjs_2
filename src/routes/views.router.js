@@ -16,7 +16,6 @@ const viewHome = async (req, res) => {
     const { limit, page, sort, query } = req.query
     const url = req.protocol + '://' + req.get('host') + req.url
     const products = await productsManager.getProducts(url, limit, page, sort, query)
-    
     res.render("home", { title: "Vista de productos", products, authenticated, style: "home.css", layout: "main" })
 }
 
