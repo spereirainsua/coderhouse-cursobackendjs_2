@@ -5,16 +5,16 @@ import passportCallback from "../../middlewares/passportCallback.mid.js"
 const createOne = async (req, res) => {
     const { title, price, stock, category, photo } = req.body
     if (!title || title.toString().trim() === '') {
-        const error = new Error("Error al procesar los datos de la solicitud.")
-        error.statusCode = 400
-        throw error
+        res.json400()
     }
     const response = await productsManager.addProduct(title, price, stock, category, photo)
-    res.status(201).json({
-        response,
-        method: req.method,
-        url: req.originalUrl,
-    })
+    res.json201(response)
+    
+    // .status(201).json({
+    //     response,
+    //     method: req.method,
+    //     url: req.originalUrl,
+    // })
 }
 
 const readAll = async (req, res) => {
@@ -22,30 +22,30 @@ const readAll = async (req, res) => {
     const url = req.protocol + '://' + req.get('host') + req.url
     const response = await productsManager.getProducts(url, limit, page, sort, query)
     if (response.length === 0) {
-        const error = new Error("Not found")
-        error.statusCode = 404
-        throw error
+        res.json404()
     }
-    res.status(200).json({
-        response,
-        method: req.method,
-        url: req.originalUrl,
-    })
+    res.json200(response)
+    
+    // .status(200).json({
+    //     response,
+    //     method: req.method,
+    //     url: req.originalUrl,
+    // })
 }
 
 const readById = async (req, res) => {
     const { pid } = req.params
     const response = await productsManager.getProductById(pid)
     if (!response) {
-        const error = new Error("Not found")
-        error.statusCode = 404
-        throw error
+        res.json404()
     }
-    res.status(200).json({
-        response,
-        method: req.method,
-        url: req.originalUrl,
-    })
+    res.json200(response)
+    
+    // .status(200).json({
+    //     response,
+    //     method: req.method,
+    //     url: req.originalUrl,
+    // })
 }
 
 const updateById = async (req, res) => {
@@ -54,16 +54,16 @@ const updateById = async (req, res) => {
     const data = req.body
     const product = await productsManager.readById(pid)
     if (!product) {
-        const error = new Error("Not found")
-        error.statusCode = 404
-        throw error
+        res.json404()
     }
     const response = await productsManager.updateProduct(pid, data)
-    res.status(200).json({
-        response,
-        method: req.method,
-        url: req.originalUrl,
-    })
+    res.json200(response)
+    
+    // .status(200).json({
+    //     response,
+    //     method: req.method,
+    //     url: req.originalUrl,
+    // })
 }
 
 const destroyById = async (req, res, next) => {
@@ -71,16 +71,16 @@ const destroyById = async (req, res, next) => {
     const { pid } = req.params
     const response = await productsManager.getProductById(pid)
     if (!response) {
-        const error = new Error("Not found")
-        error.statusCode = 404
-        throw error
+        res.json404()
     }
     await productsManager.deleteProduct(pid)
-    res.status(200).json({
-        response,
-        method: req.method,
-        url: req.originalUrl,
-    })
+    res.json200()
+    
+    // .status(200).json({
+    //     response,
+    //     method: req.method,
+    //     url: req.originalUrl,
+    // })
 }
 
 class ProductsRouter extends CustomRouter {
@@ -91,11 +91,11 @@ class ProductsRouter extends CustomRouter {
 
     init = () => {
         this.validateId("pid")
-        this.create("/", passportCallback("admin"), createOne)
-        this.read("/", readAll)
-        this.read("/:pid", readById)
-        this.update("/:pid", passportCallback("admin"), updateById)
-        this.destroy("/:pid", passportCallback("admin"), destroyById)
+        this.create("/", ["ADMIN"], createOne)
+        this.read("/", ["PUBLIC"], readAll)
+        this.read("/:pid", ["PUBLIC"], readById)
+        this.update("/:pid", ["ADMIN"], updateById)
+        this.destroy("/:pid", ["ADMIN"], destroyById)
     }
 }
 

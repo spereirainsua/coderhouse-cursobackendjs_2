@@ -1,12 +1,10 @@
 document.querySelector("#loginForm").addEventListener("submit", async (e) => {
     try {
         e.preventDefault()
-        
         const data = {
             email: document.querySelector("#email").value,
             password: document.querySelector("#password").value,
         }
-        console.log("dio clic en login "+ data)
         const opts = {
             method: "POST",
             headers: { "Content-Type": "application/json" },

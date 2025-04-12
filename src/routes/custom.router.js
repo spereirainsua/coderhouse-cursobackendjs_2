@@ -1,9 +1,12 @@
 import { Router } from "express"
 import { Types } from "mongoose"
+import setupResponses from "../middlewares/setupResponses.mid.js"
+import setupPolicies from "../middlewares/setupPolicies.mid.js"
 
 class CustomRouter {
     constructor() {
         this.router = Router()
+        this.use(setupResponses)
     }
 
     getRouter = () => this.router
@@ -18,11 +21,11 @@ class CustomRouter {
         })
     }
 
-    validateObjectId = (req, res, next, id) => {
+    validateObjectId = (req, res, next, value, paramName) => {
         try {
-            const isObjectId = Types.ObjectId.isValid(id)
+            const isObjectId = Types.ObjectId.isValid(value)
             if (isObjectId) return next()
-            const error = new Error("Invalid ID")
+            const error = new Error("Invalid ID "+paramName)
             error.statusCode = 400
             throw error
         } catch (error) {
@@ -30,10 +33,10 @@ class CustomRouter {
         }
     }
 
-    create = (path, ...arrayCallBacks) => this.router.post(path, this.applyMiddlewares(arrayCallBacks))
-    read = (path, ...arrayCallBacks) => this.router.get(path, this.applyMiddlewares(arrayCallBacks))
-    update = (path, ...arrayCallBacks) => this.router.put(path, this.applyMiddlewares(arrayCallBacks))
-    destroy = (path, ...arrayCallBacks) => this.router.delete(path, this.applyMiddlewares(arrayCallBacks))
+    create = (path, policies, ...arrayCallBacks) => this.router.post(path, setupPolicies(policies), this.applyMiddlewares(arrayCallBacks))
+    read = (path, policies, ...arrayCallBacks) => this.router.get(path, setupPolicies(policies), this.applyMiddlewares(arrayCallBacks))
+    update = (path, policies, ...arrayCallBacks) => this.router.put(path, setupPolicies(policies), this.applyMiddlewares(arrayCallBacks))
+    destroy = (path, policies, ...arrayCallBacks) => this.router.delete(path, setupPolicies(policies), this.applyMiddlewares(arrayCallBacks))
     use = (path, ...arrayCallBacks) => this.router.use(path, this.applyMiddlewares(arrayCallBacks))
     validateId = (param) => this.router.param(param, this.validateObjectId)
 }

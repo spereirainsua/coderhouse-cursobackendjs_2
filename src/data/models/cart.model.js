@@ -3,7 +3,8 @@ import mongoose from "mongoose"
 const cartSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: true
     },
     products: {
         type: [
@@ -17,13 +18,13 @@ const cartSchema = new mongoose.Schema({
         ],
         default: []
     },
-    state: { type: String, default: "empty", enum: ["reserved", "paid", "delivered"], index: true }
+    state: { type: String, default: "empty", enum: ["empty", "reserved", "paid", "delivered"], index: true }
 })
 
-cartSchema.pre("find", function (next) {
-    this.populate("users.user_id")
-    next()
-})
+// cartSchema.pre("find", function (next) {
+//     this.populate("user_id")
+//     next()
+// })
 cartSchema.pre("find", function (next) {
     this.populate("products.productId")
     next()

@@ -1,15 +1,10 @@
-const cartId = localStorage.getItem('cartId')
-
-if (!cartId) {
-    window.location.href = "/register"
-}
-
 const btnDeleteProductToCart = document.querySelectorAll('button[name="deleteFromCart"]')
 btnDeleteProductToCart.forEach(btn => {
     btn.addEventListener('click', async (event) => {
         try {
             const productId = event.currentTarget.id
-            const route = "/api/carts/" + localStorage.getItem('cartId') + "/product/" + productId
+            cart_id = await getCart()
+            const route = "/api/carts/" + cart_id + "/product/" + productId
             const response = await fetch(route, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" }

@@ -3,7 +3,6 @@ import { productsManager } from "../data/ProductsManager.js"
 import { cartsManager } from "../data/CartsManager.js"
 import isAuthenticated from "../middlewares/isAuthenticated.js"
 
-
 const viewLogin = (req, res) => {
     res.render("login", { style: "login.css" })
 }
@@ -58,11 +57,11 @@ class ViewsRouter extends CustomRouter {
     }
 
     init = () => {
-        this.read("/", isAuthenticated, viewHome)
-        this.read("/login", isAuthenticated, viewLogin)
-        this.read("/register", isAuthenticated, viewRegister)
-        this.read("/products/:pid", isAuthenticated, viewProduct)
-        this.read("/carts/:cid", isAuthenticated, viewCart)
+        this.read("/", ["PUBLIC"], isAuthenticated, viewHome)
+        this.read("/login", ["PUBLIC"], isAuthenticated, viewLogin)
+        this.read("/register", ["PUBLIC"], isAuthenticated, viewRegister)
+        this.read("/products/:pid", ["PUBLIC"], isAuthenticated, viewProduct)
+        this.read("/carts/:cid", ["USER", "ADMIN"], isAuthenticated, viewCart)
     }
 }
 
