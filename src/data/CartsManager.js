@@ -1,12 +1,16 @@
 import Cart from './models/cart.model.js'
 
 class CartsManager {
-    createNewCart = async () => {
-        return await Cart.create()
+    createNewCart = async (uid) => {
+        return await Cart.create({ user_id: uid })
     }
 
     getCartById = async (cid) => {
         return await Cart.find({ _id: cid }).lean()
+    }
+
+    getCartByUid = async (uid) => {
+        return await Cart.find({ user_id: uid }).lean()
     }
 
     updateProductsInCart = async (cart, pid) => {

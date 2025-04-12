@@ -1,7 +1,7 @@
 import passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 import { Strategy as GoogleStrategy } from "passport-google-oauth2"
-import { Strategy as JwrStrategy, ExtractJwt } from "passport-jwt"
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt"
 import { usersManager } from "../data/UsersManager.js"
 import { createHash, isValidPass } from "../helpers/hash.helper.js"
 import { createToken } from "../helpers/jwt.helper.js"
@@ -45,7 +45,7 @@ passport.use("login", new LocalStrategy(
             let data = {
                 user_id: user._id,
                 email: user.email,
-                role: user.role,
+                role: user.role
             }
             const token = createToken(data)
             req.token = token
@@ -77,7 +77,7 @@ passport.use("google",
                 let data = {
                     user_id: user._id,
                     email: user.email,
-                    role: user.role,
+                    role: user.role
                 }
                 const token = createToken(data)
                 user = {
@@ -92,10 +92,10 @@ passport.use("google",
     )
 )
 // Verificar que el usuario es parte de nuestra app
-passport.use("current", new JwrStrategy(
-    { 
-        jwtFromRequest: ExtractJwt.fromExtractors([req=> req?.cookies?.token]),
-        secretOrKey: process.env.JWT_SECRET 
+passport.use("current", new JwtStrategy(
+    {
+        jwtFromRequest: ExtractJwt.fromExtractors([req => req?.cookies?.token]),
+        secretOrKey: process.env.JWT_SECRET
     },
     async (data, done) => {
         try {
@@ -111,10 +111,10 @@ passport.use("current", new JwrStrategy(
     }
 ))
 //Verificar si el usuario es admin
-passport.use("admin", new JwrStrategy(
-    { 
-        jwtFromRequest: ExtractJwt.fromExtractors([req=> req?.cookies?.token]),
-        secretOrKey: process.env.JWT_SECRET 
+passport.use("admin", new JwtStrategy(
+    {
+        jwtFromRequest: ExtractJwt.fromExtractors([req => req?.cookies?.token]),
+        secretOrKey: process.env.JWT_SECRET
     },
     async (data, done) => {
         try {

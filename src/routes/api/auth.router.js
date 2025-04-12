@@ -5,60 +5,55 @@ import passportCallback from "../../middlewares/passportCallback.mid.js"
 const register = async (req, res) => {
   /* passport done(null, response) agrega al objeto req, la propiedad user */
   /* con los datos correspondientes del usuario */
-  res.status(201).json({
-    response: req.user._id,
-    method: req.method,
-    url: req.originalUrl,
-  })
+  res.json201()
+  
+  // .status(201).json({
+  //   response: req.user._id,
+  //   method: req.method,
+  //   url: req.originalUrl,
+  // })
 }
 
 const login = async (req, res) => {
   /* passport done(null, response) agrega al objeto req, la propiedad user */
   /* con los datos correspondientes del usuario */
   const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
-  res.cookie("token", req.token, opts).status(200).json({
-    response: req.token,
-    method: req.method,
-    url: req.originalUrl,
-  })
+  res.cookie("token", req.token, opts).json200()
+  
+  // .status(200).json({
+  //   response: req.token,
+  //   method: req.method,
+  //   url: req.originalUrl,
+  // })
 }
 
 const online = async (req, res) => {
-  // if (!req.user._id) {
-  //   const error = new Error("Invalid credentials")
-  //   error.statusCode = 401
-  //   throw error
-  // }
-  res.status(200).json({
-    user_id: req.user._id,
-    method: req.method,
-    url: req.originalUrl,
-  })
-
+  res.json200(req.user._id)
+  
+  // .status(200).json({
+  //   user_id: req.user._id,
+  //   method: req.method,
+  //   url: req.originalUrl,
+  // })
 }
 
 const signout = async (req, res) => {
-  res.clearCookie("token").status(200).json({
-    message: "Signed out",
-    method: req.method,
-    url: req.originalUrl,
-  })
+  res.clearCookie("token").json200(null, "Signed out")
+  
+  // .status(200).json({
+  //   message: "Signed out",
+  //   method: req.method,
+  //   url: req.originalUrl,
+  // })
 }
 
 const badAuth = async (req, res) => {
-  const error = new Error("Bad auth")
-  error.statusCode = 401
-  throw error
+  res.json401("Bad auth from redirect")
 }
 
 const google = async (req, res) => {
   const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
-  res.cookie("token", req.user.token, opts).status(200).redirect("/")
-  // .json({
-  //   response: req.user._id,
-  //   method: req.method,
-  //   url: req.originalUrl,
-  // })
+  res.cookie("token", req.user.token, opts).json200().redirect("/")
 }
 
 class AuthRouter extends CustomRouter {
@@ -68,22 +63,22 @@ class AuthRouter extends CustomRouter {
   }
 
   init = () => {
-    this.create("/register",
+    this.create("/register", ["PUBLIC"],
       passport.authenticate("register", {
         session: false,
         failureRedirect: "/api/auth/bad-auth",
       }),
       register)
-    this.create("/login", passportCallback("login"), login)
-    this.create("/online", passportCallback("current"), online)
-    this.create("/signout", passportCallback("current"), signout)
-    this.read("/bad-auth", badAuth)
-    this.read("/google",
+    this.create("/login", ["PUBLIC"], passportCallback("login"), login)
+    this.create("/online", ["USER", "ADMIN"], passportCallback("current"), online)
+    this.create("/signout", ["USER", "ADMIN"], passportCallback("current"), signout)
+    this.read("/bad-auth", ["PUBLIC"], badAuth)
+    this.read("/google", ["PUBLIC"],
       passport.authenticate("google", {
         scope: ["email", "profile"],
         failureRedirect: "/api/auth/bad-auth"
       }))
-    this.read("/google/callback",
+    this.read("/google/callback", ["PUBLIC"],
       passport.authenticate("google", { session: false, failureRedirect: "/api/auth/bad-auth" }),
       google)
   }

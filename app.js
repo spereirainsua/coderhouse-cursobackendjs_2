@@ -1,11 +1,10 @@
 import express from "express"
 import http from "http"
-import { Server } from "socket.io"
 import { engine } from "express-handlebars"
 import cookieParser from "cookie-parser"
 import connectMongoDB from "./src/helpers/db.js"
-import apiRouter from "./src/routes/api.router.js"
 import viewsRouter from "./src/routes/views.router.js"
+import apiRouter from "./src/routes/api.router.js"
 import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import pathHandler from "./src/helpers/pathHandler.mid.js"
 
@@ -13,7 +12,6 @@ import pathHandler from "./src/helpers/pathHandler.mid.js"
 const PORT = process.env.SERVER_PORT || 8080
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server)
 
 server.listen( PORT , () => console.log("Servidor iniciado en: http://localhost:"+PORT))
 
@@ -32,7 +30,7 @@ app.set("view engine", "handlebars")
 app.set("views", "./src/views")
 
 // Routers
-app.use("/api", apiRouter)
 app.use("/", viewsRouter)
+app.use("/api", apiRouter)
 app.use(errorHandler)
 app.use(pathHandler)

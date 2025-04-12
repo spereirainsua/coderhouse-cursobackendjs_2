@@ -1,4 +1,34 @@
+const btnCart = document.getElementById('btnCart')
 const btnLogout = document.getElementById('btnLogOut')
+
+async function getCart() {
+    let route = "/api/carts/getCart"
+    let response = await fetch(route, {
+        method: "GET"
+    })
+    let data = await response.json()
+    if (!data.response) {
+        route = "/api/carts"
+        response = await fetch(route, {
+            method: "POST"
+        })
+        data = await response.json()
+    }
+    return data.response._id
+}
+
+let cart_id = 0
+
+
+if (btnCart) {
+    btnCart.addEventListener("click", async () => {
+        getCart().then(response => {
+            cart_id = response
+        }).then(() => {
+            location.replace("/carts/" + cart_id)
+        })
+    })
+}
 
 if (btnLogout) {
     btnLogout.addEventListener('click', async () => {
@@ -9,8 +39,8 @@ if (btnLogout) {
             })
             const data = await response.json()
             if (data?.error) {
-                const error = new Error("Error del servidor!")
-                error.statusCode = 500
+                const error = new Error("No hay sesión activa!")
+                error.statusCode = 404
                 throw error
             }
             Swal.fire({
@@ -18,7 +48,7 @@ if (btnLogout) {
                 title: "Exito!",
                 text: "Se ha cerrado la sesión!"
             }).then(() => {
-                location.reload()
+                location.replace("/")
             })
         } catch (error) {
             Swal.fire({
