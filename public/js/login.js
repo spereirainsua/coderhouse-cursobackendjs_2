@@ -12,7 +12,7 @@ document.querySelector("#loginForm").addEventListener("submit", async (e) => {
         }
         const url = "/api/auth/login"
         let response = await fetch(url, opts)
-        if(response?.error) {
+        if(response.status != 200) {
             const error = new Error(response.error)
             throw error
         } else {
@@ -26,6 +26,11 @@ document.querySelector("#loginForm").addEventListener("submit", async (e) => {
         }
     } catch (error) {
         console.log(error)
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "No se pudo iniciar sesión!"
+        })
     }
 })
 

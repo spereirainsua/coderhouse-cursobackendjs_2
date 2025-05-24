@@ -9,15 +9,8 @@ function setNewPage(url, newPage) {
 }
 
 class ProductsManager {
-    addProduct = async (title, price, stock, category, photo) => {
-        const productData = {
-            title,
-            price,
-            stock,
-            category,
-            photo
-        }
-        return await Product.create(productData)
+    addProduct = async (data) => {
+        return await Product.create(data)
     }
 
     getProducts = async (url, limit, page, sort, query) => {
