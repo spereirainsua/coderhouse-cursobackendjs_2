@@ -1,6 +1,8 @@
-import { productsManager } from "../data/ProductsManager.js"
-import { cartsManager } from "../data/CartsManager.js"
+import dao from "../dao/index.factory.js"
 import isAuthenticated from "../middlewares/isAuthenticated.js"
+import {productsService} from "../services/products.services.js"
+
+const { cartsManager } = dao
 
 const viewLogin = (req, res) => {
     res.render("login", { style: "login.css" })
@@ -12,9 +14,8 @@ const viewRegister = (req, res) => {
 
 const viewHome = async (req, res) => {
     const authenticated = req.user != null
-    const { limit, page, sort, query } = req.query
     const url = req.protocol + '://' + req.get('host') + req.url
-    const products = await productsManager.getProducts(url, limit, page, sort, query)
+    const products = await productsService.readAll(url, req.query)
     res.render("home", { title: "Vista de productos", products, authenticated, style: "home.css", layout: "main" })
 }
 
@@ -22,7 +23,7 @@ const viewProduct = async (req, res) => {
     //Tener un enlace a su vista detallada en /products/:pid
     const authenticated = req.user != null
     const pid = req.params.pid
-    const product = await productsManager.getProductById(pid)
+    const product = await productsService.readById(pid)
     const status = product ? true : false
     const stock = product?.stock > 0
     res.render("viewProduct", { title: "Detalle de producto", product: product, authenticated, status, stock, style: "viewProduct.css", layout: "main" })

@@ -21,9 +21,9 @@ const badAuth = async (req, res) => {
 
 const google = async (req, res) => {
     const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
-    const response = req.user
+    req.token = req.user.token
     const token = req.token
-    res.cookie("token", token, opts).json200()
+    res.cookie("token", token, opts).redirect("/")
 }
 
 export { register, login, online, signout, badAuth, google }

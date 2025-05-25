@@ -1,11 +1,17 @@
-import { cartsManager } from "../data/CartsManager.js"
+import dao from "../dao/index.factory.js"
+
+const { cartsManager } = dao
 
 const createOne = async (req, res) => {
-    const response = await cartsManager.createNewCart(req?.user?._id)
-    if (!response) {
-        res.json404("Not created")
-    }
-    res.json201(response)
+    const user_id = req.user._id
+    const cart = await cartsManager.getCartBy({ user_id, state: "new" })
+    if (!cart) {
+        const response = await cartsManager.createNewCart(user_id)
+        if (!response) {
+            res.json404("Not created")
+        }
+        res.json201(response)
+    } else res.json200(cart)
 }
 
 const readById = async (req, res) => {
@@ -23,7 +29,7 @@ const updateProductById = async (req, res) => {
     if (!cart) {
         res.json404()
     }
-    const response = await cartsManager.updateProductsInCart(cart[0], pid)
+    const response = await cartsManager.updateProductsInCart(cid, pid)
     res.json200(response)
 }
 
@@ -33,7 +39,7 @@ const deleteProductById = async (req, res) => {
     if (!cart) {
         res.json404()
     }
-    const response = await cartsManager.deleteProductsInCart(cart[0], pid)
+    const response = await cartsManager.deleteProductsInCart(cid, pid)
     res.json200(response)
 }
 
@@ -48,12 +54,12 @@ const deleteCart = async (req, res) => {
 }
 
 const getCartByUser = async (req, res) => {
-    const user_id = req.user._id
-    const response = await cartsManager.getCartByUid(user_id)
+    const user_id = req?.user?._id
+    const response = await cartsManager.getCartBy({ user_id, state: "new" })
     if (!response) {
         res.json404()
     }
     res.json200(response[0])
 }
 
-export { createOne, readById, updateProductById, deleteProductById, deleteCart, getCartByUser}
+export { createOne, readById, updateProductById, deleteProductById, deleteCart, getCartByUser }

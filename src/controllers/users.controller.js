@@ -1,4 +1,6 @@
-import { usersManager } from "../data/UsersManager.js"
+import dao from "../dao/index.factory.js"
+
+const { usersManager } = dao
 
 const createOne = async (req, res) => {
   const data = req.body

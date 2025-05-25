@@ -2,9 +2,12 @@ import passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 import { Strategy as GoogleStrategy } from "passport-google-oauth2"
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt"
-import { usersManager } from "../data/UsersManager.js"
+import dao from "../dao/index.factory.js"
+import UserDTO from "../dto/users.dto.js"
 import { createHash, isValidPass } from "../helpers/hash.helper.js"
 import { createToken } from "../helpers/jwt.helper.js"
+
+const { usersManager } = dao
 
 // Estas variables deben llamarse tal cual están acá para que funcione la estrategia de Google
 const clientID = process.env.GOOGLE_CLIENT_ID
@@ -22,7 +25,8 @@ passport.use("register", new LocalStrategy(
                 throw error
             }
             req.body.password = createHash(password)
-            user = await usersManager.createOne(req.body)
+            const data = new UserDTO(req.body)
+            user = await usersManager.createOne(data)
             done(null, user)
         } catch (error) {
             done(error)
@@ -66,6 +70,7 @@ passport.use("google",
                 // en cambio si se registra desde google/tercero, el campo email de el id provisto
                 const email = profile.id
                 let user = await usersManager.readBy({ email })
+                
                 if (!user) {
                     user = {
                         photo: profile.picture,
@@ -80,6 +85,7 @@ passport.use("google",
                     role: user.role
                 }
                 const token = createToken(data)
+
                 user = {
                     ...user,
                     token

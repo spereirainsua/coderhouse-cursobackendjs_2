@@ -3,7 +3,6 @@ import http from "http"
 import { engine } from "express-handlebars"
 import args from "./src/helpers/arguments.helper.js"
 import cookieParser from "cookie-parser"
-import connectMongoDB from "./src/helpers/db.js"
 import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import pathHandler from "./src/helpers/pathHandler.mid.js"
 import "./src/helpers/setEnv.helper.js"
@@ -16,8 +15,7 @@ const server = http.createServer(app)
 
 server.listen( PORT , () => console.log("Servidor iniciado en: http://localhost:" + PORT + " mode " + args.mode))
 
-// Conexión con DB
-connectMongoDB(process.env.URI_MONGODB)
+
 
 // Middlewares
 app.use(cookieParser(process.env.COOKIE_KEY))

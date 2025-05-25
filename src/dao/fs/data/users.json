@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "572e52690eec9c1882567855",
+    "email": "ffasdf@fdsf",
+    "password": "$2b$10$cDpmp1a3IhmcCw0wK3jJ7ucQaqU79j.vw7LBIGqovW2qADpOQP/4O",
+    "photo": "/img/user_default.png",
+    "role": "USER",
+    "createdAt": "2025-05-25T06:42:03.018Z",
+    "updatedAt": "2025-05-25T06:42:03.018Z"
+  },
+  {
+    "_id": "0bb63c6385560ea5b847d411",
+    "email": "spereira@gmail.com",
+    "password": "$2b$10$J7GSZyMJMOsXIbQh2qQQl.E8TXYHtjSSM4.tBmGWAFFAXYzC5pQGW",
+    "photo": "/img/user_default.png",
+    "role": "ADMIN",
+    "createdAt": "2025-05-25T06:47:22.081Z",
+    "updatedAt": "2025-05-25T06:47:22.081Z"
+  }
+]

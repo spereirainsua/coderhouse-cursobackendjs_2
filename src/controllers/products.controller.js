@@ -1,5 +1,4 @@
-import productsService from "../services/products.services.js"
-import { productsManager } from "../data/ProductsManager.js"
+import {productsService} from "../services/products.services.js"
 
 const createOne = async (req, res) => {
     const data = req.body
@@ -11,9 +10,8 @@ const createOne = async (req, res) => {
 }
 
 const readAll = async (req, res) => {
-    const { limit, page, sort, query } = req.query
     const url = req.protocol + '://' + req.get('host') + req.url
-    const response = await productsService.readAll(url, limit, page, sort, query)
+    const response = await productsService.readAll(url, req.query)
     if (response.length === 0) {
         res.json404()
     }

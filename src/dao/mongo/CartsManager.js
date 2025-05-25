@@ -9,15 +9,18 @@ class CartsManager {
         return await Cart.find({ _id: cid }).lean()
     }
 
-    getCartByUid = async (uid) => {
-        return await Cart.find({ user_id: uid }).lean()
+    getCartBy = async (filter) => {
+        return await Cart.findOne(filter).lean()
     }
 
-    updateProductsInCart = async (cart, pid) => {
-        const product = cart.products.find(item => item.productId._id == pid)
+    updateProductsInCart = async (cid, pid) => {
+        const product = await Cart.findOne({
+            _id: cid,
+            "products.productId": pid
+        })
         if (product) {
             return await Cart.findByIdAndUpdate(
-                cart._id,
+                cid,
                 {
                     $inc: { "products.$[elem].quantity": 1 }
                 },
@@ -28,16 +31,16 @@ class CartsManager {
             )
         } else {
             return await Cart.findByIdAndUpdate(
-                cart._id,
+                cid,
                 { $push: { products: { productId: pid, quantity: 1 } } },
                 { new: true }
             )
         }
     }
 
-    deleteProductsInCart = async (cart, pid) => {
+    deleteProductsInCart = async (cid, pid) => {
         return await Cart.findByIdAndUpdate(
-            cart._id,
+            cid,
             { $pull: { products: { productId: pid } } },
             { new: true }
         )

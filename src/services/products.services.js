@@ -1,13 +1,13 @@
-import { productsManager } from "../data/ProductsManager.js"
+import {productsRepository} from "../repositories/products.repository.js"
 
 class ProductService {
-    createOne = async (data) => await productsManager.addProduct(data)
-    readAll = async (url, limit, page, sort, query) => await productsManager.getProducts(url, limit, page, sort, query)
-    readById = async (pid) => await productsManager.getProductById(pid)
-    updateById = async (pid, data) => await productsManager.updateProduct(pid, data)
-    destroyById = async (pid) => await productsManager.deleteProduct(pid)
+    createOne = async (data) => await productsRepository.createOne(data)
+    readAll = async (url, query) => await productsRepository.readAll(url, query)
+    readById = async (pid) => await productsRepository.readById(pid)
+    updateById = async (pid, data) => await productsRepository.updateById(pid, data)
+    destroyById = async (pid) => await productsRepository.destroyById(pid)
 }
 
-const productsService = new ProductService()
+export default ProductService
 
-export default productsService
+export const productsService = new ProductService()

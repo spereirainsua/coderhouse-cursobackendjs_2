@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "001b1827a1e324664dca8061",
+    "title": "Memoria Kingston Fury Beast DDR4 8GB 3200MHz RGB",
+    "price": 111111,
+    "stock": 10,
+    "category": "ram_memory",
+    "photo": "/img/memoria_2.jpg",
+    "createdAt": "2025-05-25T07:00:33.667Z",
+    "updatedAt": "2025-05-25T07:00:33.667Z"
+  },
+  {
+    "_id": "5610f475ad85a3ec84c24cd9",
+    "title": "Memoria Kingston Fury Beast DDR4 8GB 3200MHz RGB",
+    "price": 111111,
+    "stock": 10,
+    "category": "ram_memory",
+    "photo": "/img/memoria_2.jpg",
+    "createdAt": "2025-05-25T07:00:37.946Z",
+    "updatedAt": "2025-05-25T07:00:37.946Z"
+  },
+  {
+    "_id": "0b2932e293e33c79af420aeb",
+    "title": "Memoria Kingston Fury Beast DDR4 8GB 3200MHz RGB",
+    "price": 111111,
+    "stock": 10,
+    "category": "ram_memory",
+    "photo": "/img/memoria_2.jpg",
+    "createdAt": "2025-05-25T07:00:39.139Z",
+    "updatedAt": "2025-05-25T07:00:39.139Z"
+  },
+  {
+    "_id": "e8a575cb0ce35ee3b446507b",
+    "title": "Memoria Kingston Fury Beast DDR4 8GB 3200MHz RGB",
+    "price": 111111,
+    "stock": 10,
+    "category": "ram_memory",
+    "photo": "/img/memoria_2.jpg",
+    "createdAt": "2025-05-25T07:00:40.986Z",
+    "updatedAt": "2025-05-25T07:00:40.986Z"
+  }
+]
