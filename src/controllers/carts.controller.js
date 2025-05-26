@@ -1,4 +1,5 @@
 import dao from "../dao/index.factory.js"
+import CartsDTO from "../dto/carts.dto.js"
 
 const { cartsManager } = dao
 
@@ -6,7 +7,9 @@ const createOne = async (req, res) => {
     const user_id = req.user._id
     const cart = await cartsManager.getCartBy({ user_id, state: "new" })
     if (!cart) {
-        const response = await cartsManager.createNewCart(user_id)
+        const data = new CartsDTO({ user_id })
+        console.log(data)
+        const response = await cartsManager.createNewCart(data)
         if (!response) {
             res.json404("Not created")
         }

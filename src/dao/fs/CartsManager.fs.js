@@ -5,16 +5,12 @@ class CartsManager extends FileManager {
     super("./src/dao/fs/data/carts.json")
   }
 
-  createNewCart = async (uid) => {
-    return await this.createOne({
-      user_id: uid,
-      products: [],
-      state: "new"
-    })
+  createNewCart = async (data) => {
+    return await this.createOne(data)
   }
 
   getCartById = async (cid) => {
-    return await this.readById(cid)
+    return [await this.readById(cid)]
   }
 
   getCartBy = async (filter) => {
@@ -28,20 +24,20 @@ class CartsManager extends FileManager {
   updateProductsInCart = async (cid, pid) => {
     const cart = await this.readById(cid)
     const index = cart.products.findIndex((item) => item.productId === pid)
-    if (index) {
+    if (index !== -1) {
       const product = {
         productId: cart.products[index].productId,
         quantity: cart.products[index].quantity + 1
       }
       cart.products[index] = product
-      return await this.updateById(cid, cart.products)
+      return await this.updateById(cid, { products: cart.products })
     } else {
       const product = {
         productId: pid,
         quantity: 1
       }
       cart.products.push(product)
-      return await this.updateById(cid, cart.products)
+      return await this.updateById(cid, { products: cart.products })
     }
   }
 

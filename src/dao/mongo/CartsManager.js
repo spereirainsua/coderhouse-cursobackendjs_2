@@ -1,8 +1,8 @@
 import Cart from './models/cart.model.js'
 
 class CartsManager {
-    createNewCart = async (uid) => {
-        return await Cart.create({ user_id: uid })
+    createNewCart = async (data) => {
+        return await Cart.create(data)
     }
 
     getCartById = async (cid) => {

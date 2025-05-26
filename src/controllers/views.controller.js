@@ -1,15 +1,28 @@
 import dao from "../dao/index.factory.js"
 import isAuthenticated from "../middlewares/isAuthenticated.js"
-import {productsService} from "../services/products.services.js"
+import { productsService } from "../services/products.services.js"
 
+const { PERSISTENCE } = process.env
 const { cartsManager } = dao
 
 const viewLogin = (req, res) => {
     res.render("login", { style: "login.css" })
 }
 
+const viewVerify = (req, res) => {
+    res.render("verify", { style: "login.css" })
+}
+
 const viewRegister = (req, res) => {
     res.render("register", { style: "register.css" })
+}
+
+const viewPasswordRecovery = async (req, res) => {
+    res.render("passwordRecovery", { style: "register.css" })
+}
+
+const viewResetPassword = async (req, res) => {
+    res.render("resetPassword", { style: "register.css" })
 }
 
 const viewHome = async (req, res) => {
@@ -40,6 +53,12 @@ const viewCart = async (req, res) => {
             throw error
         }
         const cart = response[0].products
+        if (PERSISTENCE !== "mongo") {
+            for (let i = 0; i < cart.length; i++) {
+                const productData = await productsService.readById(cart[i].productId)
+                cart[i].productId = productData
+            }
+        }
         if (cart.length > 0) res.render("viewCart", { title: "Carrito de compras", status: true, authenticated, cart, style: "viewCart.css", layout: "main" })
         else res.render("viewCart", { title: "Carrito de compras", status: false, authenticated, style: "viewCart.css", layout: "main" })
     } catch (error) {
@@ -48,4 +67,4 @@ const viewCart = async (req, res) => {
     }
 }
 
-export { viewLogin, viewRegister, viewHome, viewProduct, viewCart, isAuthenticated }
+export { viewLogin, viewRegister, viewHome, viewProduct, viewCart, isAuthenticated, viewVerify, viewPasswordRecovery, viewResetPassword }

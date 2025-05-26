@@ -1,5 +1,5 @@
 import CustomRouter from "./custom.router.js"
-import { viewLogin, viewRegister, viewHome, viewProduct, viewCart, isAuthenticated } from "../controllers/views.controller.js"
+import { viewLogin, viewRegister, viewHome, viewProduct, viewCart, isAuthenticated, viewVerify, viewPasswordRecovery, viewResetPassword } from "../controllers/views.controller.js"
 
 
 class ViewsRouter extends CustomRouter {
@@ -14,6 +14,9 @@ class ViewsRouter extends CustomRouter {
         this.read("/register", ["PUBLIC"], isAuthenticated, viewRegister)
         this.read("/products/:pid", ["PUBLIC"], isAuthenticated, viewProduct)
         this.read("/carts/:cid", ["USER", "ADMIN"], isAuthenticated, viewCart)
+        this.read("/verify", ["PUBLIC"], isAuthenticated, viewVerify)
+        this.read("/passwordRecovery", ["PUBLIC"], isAuthenticated, viewPasswordRecovery)
+        this.read("/resetPassword/:code", ["PUBLIC"], isAuthenticated, viewResetPassword)
     }
 }
 

@@ -6,6 +6,7 @@ import dao from "../dao/index.factory.js"
 import UserDTO from "../dto/users.dto.js"
 import { createHash, isValidPass } from "../helpers/hash.helper.js"
 import { createToken } from "../helpers/jwt.helper.js"
+import sendEmail from "../helpers/registerEmail.helper.js"
 
 const { usersManager } = dao
 
@@ -27,6 +28,7 @@ passport.use("register", new LocalStrategy(
             req.body.password = createHash(password)
             const data = new UserDTO(req.body)
             user = await usersManager.createOne(data)
+            await sendEmail.ofRegister({ email, verifyCode: user.verifyCode })
             done(null, user)
         } catch (error) {
             done(error)
@@ -42,6 +44,7 @@ passport.use("login", new LocalStrategy(
             if (!user) {
                 return done(null, null, { message: "User not found", statusCode: 401 })
             }
+            if (!user.isVerify) return done(null, null, { message: "User not verified", statusCode: 401 })
             const verifyPassword = isValidPass(password, user.password)
             if (!verifyPassword) {
                 return done(null, null, { message: "Invalid credentials", statusCode: 401 })
@@ -77,6 +80,7 @@ passport.use("google",
                         email: profile.id,
                         password: createHash(profile.id)
                     }
+                    user = new UserDTO(user)
                     user = await usersManager.createOne(user)
                 }
                 let data = {

@@ -14,8 +14,8 @@ class CartsRouter extends CustomRouter {
         this.create("/", ["USER", "ADMIN"], passportCallback("current"), createOne)
         this.read("/getCart", ["USER", "ADMIN"], passportCallback("current"), getCartByUser)
         this.read("/:cid", ["USER", "ADMIN"], passportCallback("current"), readById)
-        this.update("/:cid/product/:pid", ["USER"], passportCallback("current"), updateProductById)
-        this.destroy("/:cid/product/:pid", ["USER"], passportCallback("current"), deleteProductById)
+        this.update("/:cid/product/:pid", ["USER", "ADMIN"], passportCallback("current"), updateProductById)
+        this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], passportCallback("current"), deleteProductById)
         this.destroy("/:cid", ["USER", "ADMIN"], passportCallback("current"), deleteCart)
     }
 }

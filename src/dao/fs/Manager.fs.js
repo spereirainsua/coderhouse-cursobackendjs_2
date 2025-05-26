@@ -39,9 +39,7 @@ class FileManager {
   //data = { _id, user_id, state } devuelve carrito
   readBy = async (data) => {
     const items = await this._readFile()
-    return items.find((item) =>
-      Object.entries(data).every(([key, value]) => item[key] === value)
-    )
+    return items.find((item) => Object.entries(data).every(([key, value]) => item[key] === value))
   }
   //Retorna carrito por id
   readById = async (id) => {
