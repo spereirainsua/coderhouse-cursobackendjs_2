@@ -9,5 +9,16 @@
     "verifyCode": "918a70cfbf547e68c1c809a0",
     "createdAt": "2025-05-25T22:26:10.608Z",
     "updatedAt": "2025-05-25T22:26:10.608Z"
+  },
+  {
+    "_id": "aacbb3d34f7f2fe976e2de0c",
+    "email": "104723468910899308087",
+    "password": "$2b$10$VMgw8eRgvyO5J4E9B8cbfeQ6rUH3nZSbWVk3Aur02xkn3g1duGKyS",
+    "photo": "https://lh3.googleusercontent.com/a/ACg8ocIj-KyUYYehTG3XMThhXNHxgXgklKlnygseAyiTAB8HfFZrcw=s96-c",
+    "role": "USER",
+    "isVerify": true,
+    "verifyCode": "67af9f2570460ba25a8b89a4",
+    "createdAt": "2025-05-26T02:46:50.486Z",
+    "updatedAt": "2025-05-26T02:46:50.486Z"
   }
 ]

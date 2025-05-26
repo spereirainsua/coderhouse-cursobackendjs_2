@@ -78,7 +78,8 @@ passport.use("google",
                     user = {
                         photo: profile.picture,
                         email: profile.id,
-                        password: createHash(profile.id)
+                        password: createHash(profile.id),
+                        isVerify: true
                     }
                     user = new UserDTO(user)
                     user = await usersManager.createOne(user)
