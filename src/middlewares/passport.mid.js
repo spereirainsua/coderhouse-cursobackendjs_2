@@ -2,9 +2,13 @@ import passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 import { Strategy as GoogleStrategy } from "passport-google-oauth2"
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt"
-import { usersManager } from "../data/UsersManager.js"
+import dao from "../dao/index.factory.js"
+import UserDTO from "../dto/users.dto.js"
 import { createHash, isValidPass } from "../helpers/hash.helper.js"
 import { createToken } from "../helpers/jwt.helper.js"
+import sendEmail from "../helpers/registerEmail.helper.js"
+
+const { usersManager } = dao
 
 // Estas variables deben llamarse tal cual están acá para que funcione la estrategia de Google
 const clientID = process.env.GOOGLE_CLIENT_ID
@@ -22,7 +26,9 @@ passport.use("register", new LocalStrategy(
                 throw error
             }
             req.body.password = createHash(password)
-            user = await usersManager.createOne(req.body)
+            const data = new UserDTO(req.body)
+            user = await usersManager.createOne(data)
+            await sendEmail.ofRegister({ email, verifyCode: user.verifyCode })
             done(null, user)
         } catch (error) {
             done(error)
@@ -38,6 +44,7 @@ passport.use("login", new LocalStrategy(
             if (!user) {
                 return done(null, null, { message: "User not found", statusCode: 401 })
             }
+            if (!user.isVerify) return done(null, null, { message: "User not verified", statusCode: 401 })
             const verifyPassword = isValidPass(password, user.password)
             if (!verifyPassword) {
                 return done(null, null, { message: "Invalid credentials", statusCode: 401 })
@@ -66,12 +73,15 @@ passport.use("google",
                 // en cambio si se registra desde google/tercero, el campo email de el id provisto
                 const email = profile.id
                 let user = await usersManager.readBy({ email })
+                
                 if (!user) {
                     user = {
                         photo: profile.picture,
                         email: profile.id,
-                        password: createHash(profile.id)
+                        password: createHash(profile.id),
+                        isVerify: true
                     }
+                    user = new UserDTO(user)
                     user = await usersManager.createOne(user)
                 }
                 let data = {
@@ -80,6 +90,7 @@ passport.use("google",
                     role: user.role
                 }
                 const token = createToken(data)
+
                 user = {
                     ...user,
                     token

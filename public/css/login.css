@@ -17,3 +17,8 @@
     margin-bottom: 10px;
     width: 100%;
 }
+
+.forgotten-password {
+    text-decoration: none;
+    text-align: right;
+}

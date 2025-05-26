@@ -7,7 +7,8 @@ const productSchema = new mongoose.Schema({
     stock: { type: Number, default: 1 },
     category: { type: String, default: "no_category", enum: ["no_category", "motherboards", "cpu", "gpu", "ram_memory", "storage", "peripherals"]},
     photo: { type: String, default: "/img/product_default.png" }
-})
+},
+{ timestamps: true })
 
 productSchema.plugin(paginate)
 

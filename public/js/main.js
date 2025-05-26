@@ -2,25 +2,23 @@ const btnCart = document.getElementById('btnCart')
 const btnLogout = document.getElementById('btnLogOut')
 
 async function getCart() {
-    let route = "/api/auth/online"
-    let response = await fetch(route, {
+    let response = await fetch("/api/auth/online", {
         method: "POST"
     })
     if (response.status != 200) {
         throw new Error("No autenticado!")
     }
-    route = "/api/carts/getCart"
-    response = await fetch(route, {
+    response = await fetch("/api/carts/getCart", {
         method: "GET"
     })
     let data = await response.json()
     if (!data.response) {
-        route = "/api/carts"
-        response = await fetch(route, {
+        response = await fetch("/api/carts", {
             method: "POST"
         })
-        data = await response.json()
     }
+    data = await response.json()
+    console.log(data)
     return data.response._id
 }
 

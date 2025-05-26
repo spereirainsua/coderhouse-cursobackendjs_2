@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"
+import "./setEnv.helper.js"
 
 const createToken = (data) => {
   try {

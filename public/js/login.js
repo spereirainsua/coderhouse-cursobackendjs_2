@@ -12,8 +12,9 @@ document.querySelector("#loginForm").addEventListener("submit", async (e) => {
         }
         const url = "/api/auth/login"
         let response = await fetch(url, opts)
-        if(response?.error) {
-            const error = new Error(response.error)
+        if(response.status != 200) {
+            const data = await response.json()
+            const error = new Error(data.error)
             throw error
         } else {
             Swal.fire({
@@ -26,9 +27,17 @@ document.querySelector("#loginForm").addEventListener("submit", async (e) => {
         }
     } catch (error) {
         console.log(error)
+        Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: error.message
+        })
     }
 })
 
 document.querySelector("#btnLoginGoogle").addEventListener("click", async () => {
     location.replace("/api/auth/google")
+})
+document.querySelector("#btnVerifyAccount").addEventListener("click", async () => {
+    location.replace("/verify")
 })

@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "ed9b14beb841b76d2ff86b35",
+    "title": "Memoria Kingston Fury Beast DDR4 8GB 3200MHz RGB",
+    "price": 1113,
+    "stock": 10,
+    "category": "memory",
+    "photo": "/img/memoria_2.jpg",
+    "createdAt": "2025-05-26T02:23:59.089Z",
+    "updatedAt": "2025-05-26T02:23:59.089Z"
+  },
+  {
+    "_id": "013fe03027fc14b77a3a7d9f",
+    "title": "Teclado Gamer Redragon Kumara White Rgb Switch Red",
+    "price": 2185,
+    "stock": 22,
+    "category": "peripherals",
+    "photo": "https://http2.mlstatic.com/D_NQ_NP_675371-MLU73277804355_122023-O.webp",
+    "createdAt": "2025-05-26T02:24:50.895Z",
+    "updatedAt": "2025-05-26T02:24:50.895Z"
+  },
+  {
+    "_id": "999a6fe4986b27217e63da37",
+    "title": "Procesador AMD Ryzen 9 7900X Box 4.7Ghz AM5",
+    "price": 17820,
+    "stock": 15,
+    "category": "cpu",
+    "photo": "/img/procesador_1.jpg",
+    "createdAt": "2025-05-26T02:25:45.666Z",
+    "updatedAt": "2025-05-26T02:25:45.666Z"
+  },
+  {
+    "_id": "bcd8e198adda296d77bd9424",
+    "title": "Mother MSI B760 Gaming Plus Wifi LGA 1700",
+    "price": 7310,
+    "stock": 9,
+    "category": "motherboards",
+    "photo": "/img/motherboard_1.jpg",
+    "createdAt": "2025-05-26T02:26:22.822Z",
+    "updatedAt": "2025-05-26T02:26:22.822Z"
+  },
+  {
+    "_id": "a28c5bd65a28b842e35cb990",
+    "title": "Disco SSD Kingston 960GB A400",
+    "price": 2420,
+    "stock": 50,
+    "category": "storage",
+    "photo": "/img/almacenamiento_1.jpg",
+    "createdAt": "2025-05-26T02:26:50.481Z",
+    "updatedAt": "2025-05-26T02:26:50.481Z"
+  },
+  {
+    "_id": "c40521031104ba72e51f344b",
+    "title": "Tarjeta Video Palit RTX 3050 StormX 6GB",
+    "price": 8436,
+    "stock": 13,
+    "category": "gpu",
+    "photo": "/img/grafica_2.png",
+    "createdAt": "2025-05-26T02:27:25.388Z",
+    "updatedAt": "2025-05-26T02:27:25.388Z"
+  }
+]

@@ -1,60 +1,7 @@
 import CustomRouter from "../custom.router.js"
 import passport from "../../middlewares/passport.mid.js"
 import passportCallback from "../../middlewares/passportCallback.mid.js"
-
-const register = async (req, res) => {
-  /* passport done(null, response) agrega al objeto req, la propiedad user */
-  /* con los datos correspondientes del usuario */
-  res.json201()
-  
-  // .status(201).json({
-  //   response: req.user._id,
-  //   method: req.method,
-  //   url: req.originalUrl,
-  // })
-}
-
-const login = async (req, res) => {
-  /* passport done(null, response) agrega al objeto req, la propiedad user */
-  /* con los datos correspondientes del usuario */
-  const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
-  res.cookie("token", req.token, opts).json200()
-  
-  // .status(200).json({
-  //   response: req.token,
-  //   method: req.method,
-  //   url: req.originalUrl,
-  // })
-}
-
-const online = async (req, res) => {
-  res.json200(req.user._id)
-  
-  // .status(200).json({
-  //   user_id: req.user._id,
-  //   method: req.method,
-  //   url: req.originalUrl,
-  // })
-}
-
-const signout = async (req, res) => {
-  res.clearCookie("token").json200(null, "Signed out")
-  
-  // .status(200).json({
-  //   message: "Signed out",
-  //   method: req.method,
-  //   url: req.originalUrl,
-  // })
-}
-
-const badAuth = async (req, res) => {
-  res.json401("Bad auth from redirect")
-}
-
-const google = async (req, res) => {
-  const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
-  res.cookie("token", req.user.token, opts).json200().redirect("/")
-}
+import { register, login, online, signout, badAuth, google, verifyEmail, passwordRecovery, changePassword } from "../../controllers/auth.controller.js"
 
 class AuthRouter extends CustomRouter {
   constructor() {
@@ -81,6 +28,9 @@ class AuthRouter extends CustomRouter {
     this.read("/google/callback", ["PUBLIC"],
       passport.authenticate("google", { session: false, failureRedirect: "/api/auth/bad-auth" }),
       google)
+    this.read("/verify/:email/code/:verifyCode", ["PUBLIC"], verifyEmail)
+    this.read("/passwordRecovery/:email", ["PUBLIC"], passwordRecovery)
+    this.update("/changePassword", ["PUBLIC"], changePassword)
   }
 }
 

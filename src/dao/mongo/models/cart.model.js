@@ -18,8 +18,9 @@ const cartSchema = new mongoose.Schema({
         ],
         default: []
     },
-    state: { type: String, default: "empty", enum: ["empty", "reserved", "paid", "delivered"], index: true }
-})
+    state: { type: String, default: "new", enum: ["new", "reserved", "paid", "delivered"], index: true }
+},
+{ timestamps: true })
 
 // cartSchema.pre("find", function (next) {
 //     this.populate("user_id")

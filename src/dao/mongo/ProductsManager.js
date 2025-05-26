@@ -9,45 +9,21 @@ function setNewPage(url, newPage) {
 }
 
 class ProductsManager {
-    addProduct = async (title, price, stock, category, photo) => {
-        const productData = {
-            title,
-            price,
-            stock,
-            category,
-            photo
-        }
-        return await Product.create(productData)
+    addProduct = async (data) => {
+        return await Product.create(data)
     }
 
-    getProducts = async (url, limit, page, sort, query) => {
+    getProducts = async (url, query) => {
+
         const params = {
             select: 'title price stock photo',
-            limit: limit || 10,
-            page: page || 1
+            limit: query.limit || 10,
+            page: query.page || 1,
+            sort: query.sort === "asc" ? { price: 1 } : query.sort === "desc" ? { price: -1 } : {}
         }
+        const { category } = query
+        const queryFilter = category ? { category } : {}
 
-        if (sort) {
-            sort === "asc" ? params.sort = { price: 1 } : sort === "desc" ? params.sort = { price: -1 } : {}
-        }
-
-        // Example query -> ?query=code_pci111&query=category_memorias
-        const queryFilter = {}
-        if (query) {
-            if (Array.isArray(query)) {
-                query.forEach(param => {
-                    const [key, value] = param.split('_')
-                    if (key && value !== undefined) {
-                        queryFilter[key] = value === "true" ? true : value === "false" ? false : value
-                    }
-                })
-            } else {
-                const [key, value] = query.split('_')
-                if (key && value !== undefined) {
-                    queryFilter[key] = value === "true" ? true : value === "false" ? false : value
-                }
-            }
-        }
         const response = await Product.paginate(queryFilter, { ...params, lean: true })
 
         const formatedResponse = {
@@ -84,6 +60,4 @@ class ProductsManager {
 
 export default ProductsManager
 
-const productsManager = new ProductsManager()
-
-export { productsManager }
+export const productsManager = new ProductsManager()

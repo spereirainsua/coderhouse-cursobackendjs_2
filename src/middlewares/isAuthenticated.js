@@ -1,5 +1,7 @@
-import { usersManager } from "../data/UsersManager.js"
+import dao from "../dao/index.factory.js"
 import { decodeToken } from "../helpers/jwt.helper.js"
+
+const { usersManager } = dao
 
 const isAuthenticated = async (req, res, next) => {
     try {
