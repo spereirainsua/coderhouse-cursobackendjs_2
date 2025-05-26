@@ -2,7 +2,6 @@ import dao from "../dao/index.factory.js"
 import ProductDTO from "../dto/products.dto.js"
 
 const { productsManager } = dao
-// console.log(productsManager)
 
 class ProductRepository {
     createOne = async (data) => await productsManager.addProduct(new ProductDTO(data))

@@ -8,7 +8,6 @@ const createOne = async (req, res) => {
     const cart = await cartsManager.getCartBy({ user_id, state: "new" })
     if (!cart) {
         const data = new CartsDTO({ user_id })
-        console.log(data)
         const response = await cartsManager.createNewCart(data)
         if (!response) {
             res.json404("Not created")
